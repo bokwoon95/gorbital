@@ -1,0 +1,57 @@
+(Wireframe model here) https://www.figma.com/file/MLm1q8i8VJ54SqCejzO71Wo3/Orbital
+
+Phases
+======
+1) Registration
+2) Invitation/ Team Creation
+3) Liftoff
+4) Mission Control
+5) Milestone 1
+6) Milestone 2
+7) Milestone 3
+8) Splashdown
+
+Skylab
+======
+• Registration
+    Interested students will first submit a signup application. Once they submit they will see a message saying 'your application has been submitted'
+        If successful, their application details will be used to create a new user in the database and an email notifying success is sent to them
+        Otherwise, a new user will not be created and a email notifying failure will be sent to them
+    • Team creation
+        Once signed in, users can search for other users by username and invite them to team up
+            The initiator will prefill in the team details first, like the name and the project level
+• Invitation
+• Milestones
+
+Skylab requirements
+===================
+• Enable login by OpenID -OR- NUSNETID+password
+    email must be provided when using NUSNETID+password for password resets
+    How to check for valid NUSNET IDs?
+• Allow users to form teams of two on the system
+    • Students can edit their team details: team name, project level
+• Allow teams submissions for each milestone
+• Each team will review and get evaluated by 3 other teams for each milestone submission. The 3 teams are not necessarily the same ones.
+    Every team will know which team gave them that evaluation as well as the contents of their evaluation. However there will be certain sections of the evaluation that are anonymized, so teams won't know which of the 3 teams actually gave them the evaluation.
+• Advisers must be able to view the teams under their supervision
+    They can also edit the team's name, project level and their 'has dropped' status
+• Advisers can evaluate the submissions from the teams under their supervision
+    Similarly, teams will be able to view their adviser evaluations the same way they can view their peer evaluations
+• Enable administrators to create, read, update or delete any users, students, adviser, mentors, administrators and evaluation relationships.
+• Enable administrators to log in as any user for debugging
+• List all the staff of Orbital
+• List all the teams that have passed the Orbital program and display the team's basic information
+• Add the notion of a cohort to the system
+• Allow the automated sending of emails
+    • For milestone reminders
+        Advisers, mentors and admins can customize the email messages
+    • For forum mentions
+        Otherwise people not gonna check the forums all day
+
+Random thoughts
+===============
+• User-uploaded avatars are a nice-to-have, but there are other more pressing issues to solve first, like the formdown generation.
+    It's perfectly fine to have all text in the meantime, even for the forums. It's literally how reddit is like.
+    Either we do it right (custom user avatars) or not at all, Gravatar is extra work for what is not as nice.
+• Who does the evaluating in a team? How to synchronize between them? Optimistic concurrency?
+    A: Optimistic concurrency. Both users can edit anytime, but before they edit, a hash of the state in the db is stored. After editing, if the hash of the state is still the same, it is safe to write the changes. Otherwise, inform that changes have been made and that they should backup their data (i.e. copy paste somewhere) before reloading the form to load the new changes.
