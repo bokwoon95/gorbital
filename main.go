@@ -10,6 +10,19 @@ import (
 	"github.com/go-chi/chi"
 )
 
+// TemplateData is an amalgamation of various component data
+type TemplateData struct {
+	NavbarData *NavbarData
+}
+
+// NavbarData contains the necessary information needed to render the navbar
+type NavbarData struct {
+	LoggedIn              bool
+	DisplayName           string
+	Role                  string
+	ParticipantTeamStatus string
+}
+
 func main() {
 	r := chi.NewRouter()
 
@@ -19,12 +32,15 @@ func main() {
 			w,
 			mustParse(
 				"templates/aboutOrbital.html",
-				"templates/navbars.html",
+				"templates/navbar.html",
 			),
-			map[string]string{
-				"role":                  "participant",
-				"display_name":          "User01",
-				"participantTeamStatus": "teamless",
+			&TemplateData{
+				NavbarData: &NavbarData{
+					LoggedIn:              true,
+					DisplayName:           "User01",
+					Role:                  "participant",
+					ParticipantTeamStatus: "teamless",
+				},
 			},
 		)
 	})

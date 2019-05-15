@@ -1,0 +1,103 @@
+{{define "navbar.html"}}
+  {{if not .LoggedIn}}
+    {{template "navbar.html public" .}}
+  {{else if eq .Role "participant"}}
+    {{template "navbar.html participant" .}}
+  {{else if eq .Role "adviser"}}
+    {{template "navbar.html adviser" .}}
+  {{else if eq .Role "mentor"}}
+    {{template "navbar.html mentor" .}}
+  {{else if eq .Role "admin"}}
+    {{template "navbar.html admin" .}}
+  {{else}}
+    {{template "navbar.html public" .}}
+  {{end}}
+{{end}}
+
+{{define "navbar.html public"}}
+<nav class="55a11c7">
+  <ul>
+    <li><a href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">Register</a></li>
+    <li><a href="#">Login</a></li>
+  </ul>
+</nav>
+{{end}}
+
+{{define "navbar.html participant"}}
+<nav class="55a11c7">
+  <ul>
+    <li><a href="#">NUS Orbital</a></li>
+    <li><a href="#">Submissions</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    {{if eq .ParticipantTeamStatus "teamless"}}
+      <li><a href="#" style="background-color:red">Create Team</a></li>
+    {{else if eq .ParticipantTeamStatus "inviteSent"}}
+      <li><a href="#" style="background-color:red">Invite Sent</a></li>
+    {{else if eq .ParticipantTeamStatus "invitePending"}}
+      <li><a href="#" style="background-color:red">Invite Pending</a></li>
+    {{else}}
+      <li><a href="#">Your Team</a></li>
+    {{end}}
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+{{end}}
+
+{{define "navbar.html adviser"}}
+<nav class="55a11c7">
+  <ul>
+    <li><a href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">Evaluate Submissions</a></li>
+    <li><a href="#">Your Teams</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+{{end}}
+
+{{define "navbar.html mentor"}}
+<nav class="55a11c7">
+  <ul>
+    <li><a href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">View Submissions</a></li>
+    <li><a href="#">Your Teams</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+{{end}}
+
+{{define "navbar.html admin"}}
+<nav class="55a11c7">
+  <ul>
+    <li><a href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">Edit Users</a></li>
+    <li><a href="#">Edit Teams</a></li>
+    <li><a href="#">Edit Templates</a></li>
+    <li><a href="#">Edit Evaluationships</a></li>
+    <li><a href="#">Edit Milestones</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+{{end}}
