@@ -26,7 +26,7 @@ type NavbarData struct {
 func main() {
 	r := chi.NewRouter()
 
-	// About Orbital
+	// aboutOrbital.html
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		mustExecute(
 			w,
