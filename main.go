@@ -40,7 +40,7 @@ func main() {
 				NavbarData: &NavbarData{
 					LoggedIn:              true,
 					DisplayName:           "User01",
-					Role:                  "participant",
+					Role:                  "admin",
 					ParticipantTeamStatus: "teamless",
 				},
 			},

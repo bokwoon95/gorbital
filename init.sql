@@ -9,9 +9,17 @@ BEGIN
   END LOOP;
 END $$;
 
+-- Drop stored procedures
+DROP PROCEDURE IF EXISTS insert_milestone;
+DROP PROCEDURE IF EXISTS insert_submission;
+
+-- Drop extentions
+DROP EXTENSION IF EXISTS pgcrypto;
+CREATE EXTENSION pgcrypto;
+
 CREATE TABLE users (
-    uid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
-    nusnetid TEXT NOT NULL,
+    uid SERIAL UNIQUE,
+    nusnetid TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     display_name TEXT NOT NULL UNIQUE,
     openid TEXT,
@@ -56,26 +64,28 @@ CREATE TABLE facilitators (
 );
 
 CREATE TABLE teams (
-    tid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    tid SERIAL UNIQUE,
     teamname TEXT NOT NULL,
     current_project_level text DEFAULT 'gemini',
+    ignition_pitch_poster TEXT,
     adviser INT,
     mentor INT
 );
 
 CREATE TABLE milestones (
-    mid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    mid SERIAL UNIQUE,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
-    phase INT NOT NULL,
+    phase TEXT NOT NULL,
     submission_deadline TIMESTAMPTZ NOT NULL,
     evaluation_deadline TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE submissions (
-    sid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    sid SERIAL UNIQUE,
     team INT NOT NULL,
     milestone INT NOT NULL,
     project_level TEXT NOT NULL,
+    project_name TEXT NOT NULL,
     project_link TEXT NOT NULL,
     project_readme TEXT NOT NULL,
     project_poster TEXT,
@@ -84,34 +94,34 @@ CREATE TABLE submissions (
 );
 
 CREATE table evaluation_templates (
-    etid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    etid SERIAL UNIQUE,
     template TEXT NOT NULL,
     formdown TEXT
 );
 
 CREATE TABLE evaluations (
-    eid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    eid SERIAL UNIQUE,
     evaluation_template INT NOT NULL,
     evaluation_content TEXT NOT NULL,
     evaluation_hash TEXT NOT NULL
 );
 
 CREATE TABLE peer_evaluationships (
-    peid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    peid SERIAL UNIQUE,
     evaluator INT,
     evaluatee INT,
     evaluation INT
 );
 
 CREATE TABLE adviser_evaluationships (
-    aeid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    aeid SERIAL UNIQUE,
     adviser INT,
     evaluatee INT,
     evaluation INT
 );
 
 CREATE TABLE orbital_state (
-    oid INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    oid SERIAL UNIQUE,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
     data jsonb
 );
@@ -123,12 +133,6 @@ CREATE TABLE orbital_state (
 --   android: ,
 --   ios: ,
 -- },
--- milestone1_start: ,
--- milestone1_end: ,
--- milestone2_start: ,
--- milestone2_end: ,
--- milestone3_start: ,
--- milestone3_end: ,
 -- splashdown: [ ],
 -- }
 
@@ -147,6 +151,9 @@ ALTER TABLE facilitators ADD CONSTRAINT facilitators_uid_fkey FOREIGN KEY (uid) 
 
 ALTER TABLE teams ADD CONSTRAINT teams_adviser_fkey FOREIGN KEY (adviser) REFERENCES advisers (uid) ON DELETE CASCADE;
 ALTER TABLE teams ADD CONSTRAINT teams_mentor_fkey FOREIGN KEY (mentor) REFERENCES mentors (uid) ON DELETE CASCADE;
+
+ALTER TABLE milestones ADD CONSTRAINT milestones_submission_before_evaluation CHECK (submission_deadline < evaluation_deadline);
+ALTER TABLE milestones ADD CONSTRAINT milestones_unique_cohort_phase UNIQUE (cohort, phase);
 
 ALTER TABLE submissions ADD CONSTRAINT submissions_team_fkey FOREIGN KEY (team) REFERENCES teams (tid) ON DELETE CASCADE;
 ALTER TABLE submissions ADD CONSTRAINT submissions_milestone_fkey FOREIGN KEY (milestone) REFERENCES milestones (mid) ON DELETE CASCADE;
