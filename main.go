@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"html/template"
 	"net/http"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi"
+	_ "github.com/lib/pq"
 )
 
 // TemplateData is an amalgamation of various component data
@@ -43,6 +45,19 @@ func main() {
 				},
 			},
 		)
+	})
+
+	r.Get("/db", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		if err = db.Ping(); err != nil {
+			panic(err)
+		} else {
+			w.Write([]byte("db success"))
+		}
 	})
 
 	// Ensure files in static/ are available to the public
