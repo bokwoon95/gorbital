@@ -28,12 +28,45 @@ type NavbarData struct {
 func main() {
 	r := chi.NewRouter()
 
-	// aboutOrbital.html
+	// aboutOrbital.html "/"
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		mustExecute(
 			w,
 			mustParse(
 				"templates/aboutOrbital.html",
+				"templates/navbar.html",
+			),
+			&TemplateData{
+				NavbarData: &NavbarData{
+					LoggedIn:              true,
+					DisplayName:           "User01",
+					Role:                  "public",
+					ParticipantTeamStatus: "teamless",
+				},
+			},
+		)
+	})
+
+	// "/db"
+	r.Get("/db", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		if err = db.Ping(); err != nil {
+			panic(err)
+		} else {
+			w.Write([]byte("db success"))
+		}
+	})
+
+	// pastYearShowcase.html "/pys"
+	r.Get("/pys", func(w http.ResponseWriter, r *http.Request) {
+		mustExecute(
+			w,
+			mustParse(
+				"templates/pastYearShowcase.html",
 				"templates/navbar.html",
 			),
 			&TemplateData{
@@ -47,17 +80,26 @@ func main() {
 		)
 	})
 
-	r.Get("/db", func(w http.ResponseWriter, r *http.Request) {
-		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
-		if err != nil {
-			panic(err)
-		}
-		defer db.Close()
-		if err = db.Ping(); err != nil {
-			panic(err)
-		} else {
-			w.Write([]byte("db success"))
-		}
+	// responsiveNavbar.html "/nvb"
+	r.Get("/nvb", func(w http.ResponseWriter, r *http.Request) {
+		mustExecute(
+			w,
+			mustParse(
+				"templates/responsiveNavbar.html",
+			),
+			nil,
+		)
+	})
+
+	// hamburger.html "/b"
+	r.Get("/b", func(w http.ResponseWriter, r *http.Request) {
+		mustExecute(
+			w,
+			mustParse(
+				"templates/burger.html",
+			),
+			nil,
+		)
 	})
 
 	// Ensure files in static/ are available to the public

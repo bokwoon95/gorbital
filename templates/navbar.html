@@ -17,10 +17,21 @@
 {{define "navbar.html public"}}
 <nav class="55a11c7">
   <ul>
-    <li><a class="logo-name" href="#">NUS Orbital</a></li>
+    <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li class="middleSeparator"></li>
+    <li><a href="#">Register</a></li>
+    <li><a href="#">Login</a></li>
+  </ul>
+</nav>
+<nav class="c1cdfd8">
+  <a class="logo" href="#">NUS Orbital</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
     <li><a href="#">Register</a></li>
     <li><a href="#">Login</a></li>
   </ul>
@@ -30,7 +41,30 @@
 {{define "navbar.html participant"}}
 <nav class="55a11c7">
   <ul>
-    <li><a class="logo-name" href="#">NUS Orbital</a></li>
+    <li><a class="logo" href="#">NUS Orbital</a></li>
+    <li><a href="#">Submissions</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    {{if eq .ParticipantTeamStatus "teamless"}}
+      <li><a href="#" style="background-color:red">Create Team</a></li>
+    {{else if eq .ParticipantTeamStatus "inviteSent"}}
+      <li><a href="#" style="background-color:red">Invite Sent</a></li>
+    {{else if eq .ParticipantTeamStatus "invitePending"}}
+      <li><a href="#" style="background-color:red">Invite Pending</a></li>
+    {{else}}
+      <li><a href="#">Your Team</a></li>
+    {{end}}
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+<nav class="c1cdfd8">
+  <a class="logo" href="#">NUS Orbital</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
     <li><a href="#">Submissions</a></li>
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
@@ -54,7 +88,22 @@
 {{define "navbar.html adviser"}}
 <nav class="55a11c7">
   <ul>
-    <li><a class="logo-name" href="#">NUS Orbital</a></li>
+    <li><a class="logo" href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">Evaluate Submissions</a></li>
+    <li><a href="#">Your Teams</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+<nav class="c1cdfd8">
+  <a class="logo" href="#">NUS Orbital</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
@@ -70,7 +119,21 @@
 {{define "navbar.html mentor"}}
 <nav class="55a11c7">
   <ul>
-    <li><a class="logo-name" href="#">NUS Orbital</a></li>
+    <li><a class="logo" href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">View Submissions</a></li>
+    <li><a href="#">Your Teams</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+<nav class="c1cdfd8">
+  <a class="logo" href="#">NUS Orbital</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
@@ -81,12 +144,31 @@
     <li><a href="#">Logout</a></li>
   </ul>
 </nav>
+</nav>
 {{end}}
 
 {{define "navbar.html admin"}}
 <nav class="55a11c7">
   <ul>
-    <li><a class="logo-name" href="#">NUS Orbital</a></li>
+    <li><a class="logo" href="#">NUS Orbital</a></li>
+    <li><a href="#">Past Year Showcase</a></li>
+    <li><a href="#">News</a></li>
+    <li><a href="#">Forum</a></li>
+    <li class="middleSeparator"></li>
+    <li><a href="#">Edit Users</a></li>
+    <li><a href="#">Edit Teams</a></li>
+    <li><a href="#">Edit Templates</a></li>
+    <li><a href="#">Edit Evaluationships</a></li>
+    <li><a href="#">Edit Milestones</a></li>
+    <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+<nav class="c1cdfd8">
+  <a class="logo" href="#">NUS Orbital</a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
