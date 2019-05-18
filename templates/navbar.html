@@ -15,7 +15,7 @@
 {{end}}
 
 {{define "navbar.html public"}}
-<nav class="55a11c7">
+<nav class="55a11c7-navbar">
   <ul>
     <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Past Year Showcase</a></li>
@@ -25,7 +25,7 @@
     <li><a href="#">Login</a></li>
   </ul>
 </nav>
-<nav class="c1cdfd8">
+<nav class="c1cdfd8-hamburger">
   <a class="logo" href="#">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -39,7 +39,7 @@
 {{end}}
 
 {{define "navbar.html participant"}}
-<nav class="55a11c7">
+<nav class="55a11c7-navbar">
   <ul>
     <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Submissions</a></li>
@@ -60,7 +60,7 @@
     <li><a href="#">Logout</a></li>
   </ul>
 </nav>
-<nav class="c1cdfd8">
+<nav class="c1cdfd8-hamburger">
   <a class="logo" href="#">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -69,7 +69,6 @@
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
-    <li class="middleSeparator"></li>
     {{if eq .ParticipantTeamStatus "teamless"}}
       <li><a href="#" style="background-color:red">Create Team</a></li>
     {{else if eq .ParticipantTeamStatus "inviteSent"}}
@@ -86,7 +85,7 @@
 {{end}}
 
 {{define "navbar.html adviser"}}
-<nav class="55a11c7">
+<nav class="55a11c7-navbar">
   <ul>
     <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Past Year Showcase</a></li>
@@ -99,7 +98,7 @@
     <li><a href="#">Logout</a></li>
   </ul>
 </nav>
-<nav class="c1cdfd8">
+<nav class="c1cdfd8-hamburger">
   <a class="logo" href="#">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -107,7 +106,6 @@
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
-    <li class="middleSeparator"></li>
     <li><a href="#">Evaluate Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
@@ -117,7 +115,7 @@
 {{end}}
 
 {{define "navbar.html mentor"}}
-<nav class="55a11c7">
+<nav class="55a11c7-navbar">
   <ul>
     <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Past Year Showcase</a></li>
@@ -129,7 +127,7 @@
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
     <li><a href="#">Logout</a></li>
   </ul>
-<nav class="c1cdfd8">
+<nav class="c1cdfd8-hamburger">
   <a class="logo" href="#">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -137,7 +135,6 @@
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
-    <li class="middleSeparator"></li>
     <li><a href="#">View Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
@@ -148,7 +145,7 @@
 {{end}}
 
 {{define "navbar.html admin"}}
-<nav class="55a11c7">
+<nav class="55a11c7-navbar">
   <ul>
     <li><a class="logo" href="#">NUS Orbital</a></li>
     <li><a href="#">Past Year Showcase</a></li>
@@ -164,7 +161,7 @@
     <li><a href="#">Logout</a></li>
   </ul>
 </nav>
-<nav class="c1cdfd8">
+<nav class="c1cdfd8-hamburger">
   <a class="logo" href="#">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -172,7 +169,6 @@
     <li><a href="#">Past Year Showcase</a></li>
     <li><a href="#">News</a></li>
     <li><a href="#">Forum</a></li>
-    <li class="middleSeparator"></li>
     <li><a href="#">Edit Users</a></li>
     <li><a href="#">Edit Teams</a></li>
     <li><a href="#">Edit Templates</a></li>

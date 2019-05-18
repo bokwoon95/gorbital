@@ -61,6 +61,18 @@ func main() {
 		}
 	})
 
+	// "/dump"
+	r.Get("/dump", func(w http.ResponseWriter, r *http.Request) {
+		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		if err = db.Ping(); err != nil {
+			panic(err)
+		}
+	})
+
 	// pastYearShowcase.html "/pys"
 	r.Get("/pys", func(w http.ResponseWriter, r *http.Request) {
 		mustExecute(
@@ -77,28 +89,6 @@ func main() {
 					ParticipantTeamStatus: "teamless",
 				},
 			},
-		)
-	})
-
-	// responsiveNavbar.html "/nvb"
-	r.Get("/nvb", func(w http.ResponseWriter, r *http.Request) {
-		mustExecute(
-			w,
-			mustParse(
-				"templates/responsiveNavbar.html",
-			),
-			nil,
-		)
-	})
-
-	// hamburger.html "/b"
-	r.Get("/b", func(w http.ResponseWriter, r *http.Request) {
-		mustExecute(
-			w,
-			mustParse(
-				"templates/burger.html",
-			),
-			nil,
 		)
 	})
 
