@@ -2,13 +2,16 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/go-chi/chi"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -26,7 +29,20 @@ type NavbarData struct {
 }
 
 func main() {
+	// Create router object 'r'
 	r := chi.NewRouter()
+
+	// Create database object 'db'
+	var db *sqlx.DB
+	var err error
+	if db, err = sqlx.Open(
+		"postgres",
+		"postgres://bokwoon@localhost/orbital_dev?sslmode=disable",
+	); err != nil {
+		fmt.Println("Error when establishing database interface")
+		panic(err)
+	}
+	defer db.Close()
 
 	// aboutOrbital.html "/"
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -49,27 +65,11 @@ func main() {
 
 	// "/db"
 	r.Get("/db", func(w http.ResponseWriter, r *http.Request) {
-		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
-		if err != nil {
-			panic(err)
-		}
-		defer db.Close()
-		if err = db.Ping(); err != nil {
+		if err := db.Ping(); err != nil {
+			fmt.Fprintf(w, err.Error())
 			panic(err)
 		} else {
-			w.Write([]byte("db success"))
-		}
-	})
-
-	// "/dump"
-	r.Get("/dump", func(w http.ResponseWriter, r *http.Request) {
-		db, err := sql.Open("postgres", "postgres://bokwoon@localhost/orbital_dev?sslmode=disable")
-		if err != nil {
-			panic(err)
-		}
-		defer db.Close()
-		if err = db.Ping(); err != nil {
-			panic(err)
+			fmt.Fprintf(w, "db connection success")
 		}
 	})
 
@@ -90,6 +90,28 @@ func main() {
 				},
 			},
 		)
+	})
+
+	// "/dump"
+	r.Get("/dump", func(w http.ResponseWriter, r *http.Request) {
+		type Submission struct {
+			ProjectName         string         `db:"project_name"`
+			IgnitionPitchPoster string         `db:"ignition_pitch_poster"`
+			ProjectPoster       sql.NullString `db:"project_poster"`
+			ProjectVideo        sql.NullString `db:"project_video"`
+		}
+		var submissions []Submission
+		rows, _ := db.Queryx(`
+		SELECT project_name, ignition_pitch_poster, project_poster, project_video
+		FROM submissions JOIN teams ON teams.tid = submissions.team
+		`)
+		defer rows.Close()
+		for rows.Next() {
+			var s Submission
+			err = rows.StructScan(&s)
+			submissions = append(submissions, s)
+		}
+		fmt.Fprintf(w, spew.Sdump(submissions))
 	})
 
 	// Ensure files in static/ are available to the public
