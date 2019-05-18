@@ -70,7 +70,7 @@ func main() {
 				NavbarData: &NavbarData{
 					LoggedIn:              true,
 					DisplayName:           "User01",
-					Role:                  "public",
+					Role:                  "participant",
 					ParticipantTeamStatus: "teamless",
 				},
 			},
@@ -87,8 +87,8 @@ func main() {
 		}
 	})
 
-	// pastYearShowcase.html "/pys"
-	r.Get("/pys", func(w http.ResponseWriter, r *http.Request) {
+	// pastYearShowcase.html "/showcase"
+	r.Get("/showcase", func(w http.ResponseWriter, r *http.Request) {
 		rows, _ := db.Queryx(`
 		SELECT t.tid ,u.display_name as adviser ,project_name ,ignition_pitch_poster ,project_poster,project_video 
 		FROM submissions s JOIN teams t ON t.tid = s.team JOIN advisers a ON a.uid = t.adviser JOIN users u ON u.uid = a.uid;
@@ -121,29 +121,13 @@ func main() {
 				NavbarData: &NavbarData{
 					LoggedIn:              true,
 					DisplayName:           "User01",
-					Role:                  "admin",
+					Role:                  "participant",
 					ParticipantTeamStatus: "teamless",
 				},
 				Projects:  projects,
 				DebugStrings: []string{spew.Sdump(projects)},
 			},
 		)
-	})
-
-	// "/dump"
-	r.Get("/dump", func(w http.ResponseWriter, r *http.Request) {
-		var projects []Project
-		rows, _ := db.Queryx(`
-		SELECT project_name, ignition_pitch_poster, project_poster, project_video
-		FROM submissions JOIN teams ON teams.tid = submissions.team
-		`)
-		defer rows.Close()
-		for rows.Next() {
-			var project Project
-			err = rows.StructScan(&project)
-			projects = append(projects, project)
-		}
-		fmt.Fprintf(w, spew.Sdump(projects))
 	})
 
 	// Ensure files in static/ are available to the public
