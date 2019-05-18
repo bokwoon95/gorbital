@@ -40,6 +40,7 @@ body {
   }
 }
 
+/* https://medium.com/samsung-internet-dev/common-responsive-layouts-with-css-grid-and-some-without-245a862f48df */
 /* Flex styles -------------------------------------------------*/
 @media (min-width: 700px) {
  .leading {

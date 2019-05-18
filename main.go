@@ -17,15 +17,29 @@ import (
 
 // TemplateData is an amalgamation of various component data
 type TemplateData struct {
-	NavbarData *NavbarData
+	NavbarData   *NavbarData
+	Projects     []Project
+	DebugStrings []string
 }
 
 // NavbarData contains the necessary information needed to render the navbar
 type NavbarData struct {
 	LoggedIn              bool
-	DisplayName           string
+	DisplayName           string `db:"display_name"`
 	Role                  string
 	ParticipantTeamStatus string
+}
+
+// Project contains the necessary information needed to render each project showcase
+type Project struct {
+	TeamID              string         `db:"tid"`
+	Adviser             string         `db:"adviser"`
+	ProjectName         string         `db:"project_name"`
+	IgnitionPitchPoster string         `db:"ignition_pitch_poster"`
+	ProjectPoster       sql.NullString `db:"project_poster"`
+	ProjectVideo        sql.NullString `db:"project_video"`
+	SafeProjectPoster   template.URL
+	SafeProjectVideo    template.URL
 }
 
 func main() {
@@ -75,6 +89,28 @@ func main() {
 
 	// pastYearShowcase.html "/pys"
 	r.Get("/pys", func(w http.ResponseWriter, r *http.Request) {
+		rows, _ := db.Queryx(`
+		SELECT t.tid ,u.display_name as adviser ,project_name ,ignition_pitch_poster ,project_poster,project_video 
+		FROM submissions s JOIN teams t ON t.tid = s.team JOIN advisers a ON a.uid = t.adviser JOIN users u ON u.uid = a.uid;
+		`)
+		defer rows.Close()
+		var projects []Project
+		for rows.Next() {
+			var project Project
+			err = rows.StructScan(&project)
+			if project.ProjectPoster.Valid {
+				project.SafeProjectPoster = template.URL(project.ProjectPoster.String)
+			} else {
+				project.SafeProjectPoster = template.URL("")
+			}
+			if project.ProjectVideo.Valid {
+				project.SafeProjectVideo = template.URL(project.ProjectVideo.String)
+			} else {
+				project.SafeProjectVideo = template.URL("")
+			}
+			projects = append(projects, project)
+		}
+
 		mustExecute(
 			w,
 			mustParse(
@@ -88,30 +124,26 @@ func main() {
 					Role:                  "admin",
 					ParticipantTeamStatus: "teamless",
 				},
+				Projects:  projects,
+				DebugStrings: []string{spew.Sdump(projects)},
 			},
 		)
 	})
 
 	// "/dump"
 	r.Get("/dump", func(w http.ResponseWriter, r *http.Request) {
-		type Submission struct {
-			ProjectName         string         `db:"project_name"`
-			IgnitionPitchPoster string         `db:"ignition_pitch_poster"`
-			ProjectPoster       sql.NullString `db:"project_poster"`
-			ProjectVideo        sql.NullString `db:"project_video"`
-		}
-		var submissions []Submission
+		var projects []Project
 		rows, _ := db.Queryx(`
 		SELECT project_name, ignition_pitch_poster, project_poster, project_video
 		FROM submissions JOIN teams ON teams.tid = submissions.team
 		`)
 		defer rows.Close()
 		for rows.Next() {
-			var s Submission
-			err = rows.StructScan(&s)
-			submissions = append(submissions, s)
+			var project Project
+			err = rows.StructScan(&project)
+			projects = append(projects, project)
 		}
-		fmt.Fprintf(w, spew.Sdump(submissions))
+		fmt.Fprintf(w, spew.Sdump(projects))
 	})
 
 	// Ensure files in static/ are available to the public
