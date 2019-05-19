@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (01,'e0031874','password','Admin01') ON CONFLICT DO NOTHING;
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (02,'e0031875','password','Admin02') ON CONFLICT DO NOTHING;
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (03,'e0031876','password','Facilitator03') ON CONFLICT DO NOTHING;
@@ -100,7 +102,7 @@ DECLARE
     submission_date TIMESTAMPTZ := (SELECT now() + submission_offset_from_now);
     evaluation_date TIMESTAMPTZ := (SELECT now() + evaluation_offset_from_now);
 BEGIN
-    RAISE NOTICE 'INSERT INTO milestones (mid, phase, submission_deadline, evaluation_deadline) VALUES (%, %, %, %)', mid, phase, submission_date, evaluation_date;
+    -- RAISE NOTICE 'INSERT INTO milestones (mid, phase, submission_deadline, evaluation_deadline) VALUES (%, %, %, %)', mid, phase, submission_date, evaluation_date;
     INSERT INTO milestones (mid, phase, submission_deadline, evaluation_deadline) VALUES (mid, phase, submission_date, evaluation_date) ON CONFLICT DO NOTHING;
 END;
 $$ LANGUAGE plpgsql;
@@ -114,8 +116,7 @@ AS $$ DECLARE
     bigstring TEXT := (SELECT CONCAT(team, milestone, project_level, project_link, project_readme, project_poster, project_video));
     submission_hash TEXT := (SELECT encode(digest(bigstring, 'md5'), 'hex'));
 BEGIN
-    RAISE NOTICE 'INSERT INTO submissions (team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash)
-    VALUES (%, %, %, %, %, %, %, %, %)', team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash;
+    -- RAISE NOTICE 'INSERT INTO submissions (team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash) VALUES (%, %, %, %, %, %, %, %, %)', team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash;
     INSERT INTO submissions (team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash)
     VALUES (team, milestone, project_level, project_name, project_link, project_readme, project_poster, project_video, submission_hash) ON CONFLICT DO NOTHING;
 END;

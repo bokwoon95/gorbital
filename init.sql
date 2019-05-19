@@ -26,42 +26,60 @@ CREATE TABLE users (
     email TEXT
 );
 
-CREATE TABLE admins (
-    uid INT UNIQUE,
-    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
-    PRIMARY KEY (uid, cohort)
-);
-
-CREATE TABLE advisers (
-    uid INT UNIQUE,
-    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
-    PRIMARY KEY (uid, cohort)
-);
-
-CREATE TABLE mentors (
-    uid INT UNIQUE,
-    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
-    PRIMARY KEY (uid, cohort)
-);
-
 CREATE TABLE participants (
-    uid INT UNIQUE,
+    uid INT,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
     team INT,
     PRIMARY KEY (uid, cohort)
 );
 
+CREATE OR REPLACE VIEW v_participants AS
+SELECT * FROM users JOIN participants USING (uid);
+
 CREATE TABLE tutors (
-    uid INT UNIQUE,
+    uid INT,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
     PRIMARY KEY (uid, cohort)
 );
 
-CREATE TABLE facilitators (
-    uid INT UNIQUE,
+CREATE OR REPLACE VIEW v_tutors AS
+SELECT * FROM users JOIN tutors USING (uid);
+
+CREATE TABLE advisers (
+    uid INT,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
     PRIMARY KEY (uid, cohort)
 );
+
+CREATE OR REPLACE VIEW v_advisers AS
+SELECT * FROM users JOIN advisers USING (uid);
+
+CREATE TABLE mentors (
+    uid INT,
+    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
+    PRIMARY KEY (uid, cohort)
+);
+
+CREATE OR REPLACE VIEW v_mentors AS
+SELECT * FROM users JOIN mentors USING (uid);
+
+CREATE TABLE admins (
+    uid INT,
+    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
+    PRIMARY KEY (uid, cohort)
+);
+
+CREATE OR REPLACE VIEW v_admins AS
+SELECT * FROM users JOIN admins USING (uid);
+
+CREATE TABLE facilitators (
+    uid INT,
+    cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
+    PRIMARY KEY (uid, cohort)
+);
+
+CREATE OR REPLACE VIEW v_facilitators AS
+SELECT * FROM users JOIN facilitators USING (uid);
 
 CREATE TABLE teams (
     tid SERIAL UNIQUE,
@@ -136,9 +154,9 @@ CREATE TABLE orbital_state (
 -- splashdown: [ ],
 -- }
 
-ALTER TABLE admins ADD CONSTRAINT admins_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
+ALTER TABLE admins ADD CONSTRAINT admins_partial_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
 
-ALTER TABLE advisers ADD CONSTRAINT advisers_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
+ALTER TABLE advisers ADD CONSTRAINT advisers_partial_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
 
 ALTER TABLE mentors ADD CONSTRAINT mentors_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
 
@@ -149,14 +167,15 @@ ALTER TABLE tutors ADD CONSTRAINT tutors_uid_fkey FOREIGN KEY (uid) REFERENCES u
 
 ALTER TABLE facilitators ADD CONSTRAINT facilitators_uid_fkey FOREIGN KEY (uid) REFERENCES users (uid) ON DELETE CASCADE;
 
-ALTER TABLE teams ADD CONSTRAINT teams_adviser_fkey FOREIGN KEY (adviser) REFERENCES advisers (uid) ON DELETE CASCADE;
-ALTER TABLE teams ADD CONSTRAINT teams_mentor_fkey FOREIGN KEY (mentor) REFERENCES mentors (uid) ON DELETE CASCADE;
+ALTER TABLE teams ADD CONSTRAINT teams_adviser_fkey FOREIGN KEY (adviser) REFERENCES users (uid) ON DELETE CASCADE;
+ALTER TABLE teams ADD CONSTRAINT teams_mentor_fkey FOREIGN KEY (mentor) REFERENCES users (uid) ON DELETE CASCADE;
 
 ALTER TABLE milestones ADD CONSTRAINT milestones_submission_before_evaluation CHECK (submission_deadline < evaluation_deadline);
 ALTER TABLE milestones ADD CONSTRAINT milestones_unique_cohort_phase UNIQUE (cohort, phase);
 
 ALTER TABLE submissions ADD CONSTRAINT submissions_team_fkey FOREIGN KEY (team) REFERENCES teams (tid) ON DELETE CASCADE;
 ALTER TABLE submissions ADD CONSTRAINT submissions_milestone_fkey FOREIGN KEY (milestone) REFERENCES milestones (mid) ON DELETE CASCADE;
+ALTER TABLE submissions ADD CONSTRAINT submissions_unique_team_milestone UNIQUE (team, milestone);
 
 ALTER TABLE evaluations ADD CONSTRAINT evaluations_evaluation_template_fkey FOREIGN KEY (evaluation_template) REFERENCES evaluation_templates (etid) ON DELETE CASCADE;
 
@@ -164,6 +183,6 @@ ALTER TABLE peer_evaluationships ADD CONSTRAINT peer_evaluationships_evaluator_f
 ALTER TABLE peer_evaluationships ADD CONSTRAINT peer_evaluationships_evaluatee_fkey FOREIGN KEY (evaluatee) REFERENCES submissions (sid) ON DELETE CASCADE;
 ALTER TABLE peer_evaluationships ADD CONSTRAINT peer_evaluationships_evaluation FOREIGN KEY (evaluation) REFERENCES evaluations (eid) ON DELETE CASCADE;
 
-ALTER TABLE adviser_evaluationships ADD CONSTRAINT adviser_evaluationships_adviser_fkey FOREIGN KEY (adviser) REFERENCES advisers (uid) ON DELETE CASCADE;
+ALTER TABLE adviser_evaluationships ADD CONSTRAINT adviser_evaluationships_adviser_fkey FOREIGN KEY (adviser) REFERENCES users (uid) ON DELETE CASCADE;
 ALTER TABLE adviser_evaluationships ADD CONSTRAINT adviser_evaluationships_evaluatee_fkey FOREIGN KEY (evaluatee) REFERENCES submissions (sid) ON DELETE CASCADE;
 ALTER TABLE adviser_evaluationships ADD CONSTRAINT advisers_evaluation_fkey FOREIGN KEY (evaluation) REFERENCES evaluations (eid) ON DELETE CASCADE;
