@@ -20,9 +20,9 @@ func main() {
 	defer models.DB.Close() // When the main function dies, so should the database
 
 	// Set up routes
-	r.Get("/", controllers.AboutOrbital)
+	r.Get("/", controllers.AboutOrbital5380c8f)
+	r.Get("/showcase", controllers.PastYearShowcase361d489)
 	r.Get("/testdb", controllers.TestDB)
-	r.Get("/showcase", controllers.PastYearShowcase)
 
 	// Ensure these directories are accessible to the public
 	workDir, _ := os.Getwd()
