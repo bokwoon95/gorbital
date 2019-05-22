@@ -1,32 +1,53 @@
-DROP VIEW IF EXISTS vvv_teams CASCADE;
-DROP VIEW IF EXISTS vv_participant_pairs CASCADE;
-
-CREATE OR REPLACE VIEW vv_participant_pairs AS
+DROP VIEW IF EXISTS v_teams CASCADE;
+CREATE OR REPLACE VIEW v_teams AS
+WITH participants_full AS (
+    SELECT uid, nusnetid, password, display_name, openid, email, cohort, team
+    FROM users JOIN participants USING (uid)
+)
 SELECT
-    a.team
-    ,a.cohort
-    ,a.uid AS uid1
-    ,a.display_name AS participant1
-    ,b.uid AS uid2
-    ,b.display_name AS participant2
-FROM
-    v_participants a
-    JOIN v_participants b ON a.team = b.team AND a.display_name < b.display_name
-;
-
-CREATE OR REPLACE VIEW vvv_teams AS
-SELECT
-    vv_pp.cohort
-    ,t.current_project_level
-    ,t.teamname
-    ,vv_pp.participant1
-    ,vv_pp.participant2
-    ,v_a.display_name AS adviser_name
-    ,v_m.display_name AS mentor_name
+    p1.cohort
+    ,t.team_project_level
+    ,t.team_name AS team_name
+    ,p1.display_name AS participant1
+    ,p2.display_name AS participant2
+    ,ua.display_name AS adviser
+    ,um.display_name AS mentor
     ,t.ignition_pitch_poster
 FROM
     teams t
-    LEFT JOIN v_advisers AS v_a ON v_a.uid = t.adviser
-    LEFT JOIN v_mentors AS v_m ON v_m.uid = t.mentor
-    JOIN vv_participant_pairs AS vv_pp ON vv_pp.team = t.tid
+    LEFT JOIN users AS ua ON ua.uid = t.adviser
+    LEFT JOIN users AS um ON um.uid = t.mentor
+    JOIN participants_full AS p1 ON p1.team = t.tid
+    JOIN participants_full AS p2 ON p2.team = t.tid AND p1.display_name < p2.display_name
+;
+
+DROP VIEW IF EXISTS v_submissions CASCADE;
+CREATE OR REPLACE VIEW v_submissions AS
+WITH participants_full AS (
+    SELECT uid, nusnetid, password, display_name, openid, email, cohort,team
+    FROM users JOIN participants USING (uid)
+)
+SELECT
+    s.milestone
+    ,s.project_level
+    ,s.project_name
+    ,s.project_link
+    ,s.project_readme
+    ,s.project_poster
+    ,s.project_video
+    ,p1.cohort
+    ,t.team_project_level
+    ,t.team_name
+    ,p1.display_name AS participant1
+    ,p2.display_name AS participant2
+    ,ua.display_name AS adviser
+    ,um.display_name AS mentor
+    ,t.ignition_pitch_poster
+FROM
+    teams t
+    LEFT JOIN users AS ua ON ua.uid = t.adviser
+    LEFT JOIN users AS um ON um.uid = t.mentor
+    JOIN participants_full AS p1 ON p1.team = t.tid
+    JOIN participants_full AS p2 ON p2.team = t.tid AND p1.display_name < p2.display_name
+    JOIN submissions AS s ON s.team = t.tid
 ;

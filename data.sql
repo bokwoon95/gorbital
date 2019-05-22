@@ -30,6 +30,7 @@ INSERT INTO users (uid, nusnetid, password, display_name) VALUES (27,'e0031900',
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (28,'e0031901','password','User28') ON CONFLICT DO NOTHING;
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (29,'e0031902','password','User29') ON CONFLICT DO NOTHING;
 INSERT INTO users (uid, nusnetid, password, display_name) VALUES (30,'e0031903','password','User30') ON CONFLICT DO NOTHING;
+SELECT setval('users_uid_seq', (SELECT MAX(uid) FROM users));
 
 INSERT INTO admins (uid) VALUES (1) ON CONFLICT DO NOTHING;
 INSERT INTO admins (uid) VALUES (2) ON CONFLICT DO NOTHING;
@@ -67,15 +68,16 @@ INSERT INTO participants (uid) VALUES (28) ON CONFLICT DO NOTHING;
 INSERT INTO participants (uid) VALUES (29) ON CONFLICT DO NOTHING;
 INSERT INTO participants (uid) VALUES (30) ON CONFLICT DO NOTHING;
 
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (1,'PaperBack','vostok','https://image.ibb.co/n96hwJ/Initial_Idea.jpg',7,NULL) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (2,'MaveWonders','vostok','https://image.ibb.co/mwWd3y/Ignition_Spot_Sports.png',7,NULL) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (3,'1638','vostok','',7,NULL) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (4,'EatLah!','gemini','https://image.ibb.co/ioSomJ/Orbital_1.jpg',7, NULL) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (5,'1473','gemini','https://i.imgur.com/zdNULkO.jpg',8,5) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (6,'Garanguni','gemini','https://image.ibb.co/ctEhfd/Slide1.jpg',8,5) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (7,'Google','apollo','https://i.imgur.com/PxsuEwc.jpg',8,6) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (8,'1509','apollo','https://image.ibb.co/kQEjRJ/Screen_Shot_2018_05_15_at_2_30_22_PM.png',8,6) ON CONFLICT DO NOTHING;
-INSERT INTO teams (tid, teamname, current_project_level, ignition_pitch_poster, adviser, mentor) VALUES (9,'KZMY','apollo','https://image.ibb.co/mCJm6J/Team_KZMY.jpg',8,6) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (1,'PaperBack','vostok','https://image.ibb.co/n96hwJ/Initial_Idea.jpg',7,NULL) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (2,'MaveWonders','vostok','https://image.ibb.co/mwWd3y/Ignition_Spot_Sports.png',7,NULL) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (3,'1638','vostok','',7,NULL) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (4,'EatLah!','gemini','https://image.ibb.co/ioSomJ/Orbital_1.jpg',7, NULL) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (5,'1473','gemini','https://i.imgur.com/zdNULkO.jpg',8,5) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (6,'Garanguni','gemini','https://image.ibb.co/ctEhfd/Slide1.jpg',8,5) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (7,'Google','apollo','https://i.imgur.com/PxsuEwc.jpg',8,6) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (8,'1509','apollo','https://image.ibb.co/kQEjRJ/Screen_Shot_2018_05_15_at_2_30_22_PM.png',8,6) ON CONFLICT DO NOTHING;
+INSERT INTO teams (tid, team_name, team_project_level, ignition_pitch_poster, adviser, mentor) VALUES (9,'KZMY','apollo','https://image.ibb.co/mCJm6J/Team_KZMY.jpg',8,6) ON CONFLICT DO NOTHING;
+SELECT setval('teams_tid_seq', (SELECT MAX(tid) FROM teams));
 
 UPDATE participants SET team = 1 WHERE uid = 11;
 UPDATE participants SET team = 1 WHERE uid = 12;
@@ -109,6 +111,7 @@ $$ LANGUAGE plpgsql;
 CALL insert_milestone(1,'1','-1 month -2 weeks','-1 month');
 CALL insert_milestone(2,'2','-1 week','1 week');
 CALL insert_milestone(3,'3','1 month','1 month 2 weeks');
+SELECT setval('milestones_mid_seq', (SELECT MAX(mid) FROM milestones));
 
 CREATE OR REPLACE PROCEDURE
 insert_submission(team INT, milestone INT, project_level TEXT, project_name TEXT, project_link TEXT, project_readme TEXT, project_poster TEXT, project_video TEXT)

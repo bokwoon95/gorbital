@@ -83,8 +83,8 @@ SELECT * FROM users JOIN facilitators USING (uid);
 
 CREATE TABLE teams (
     tid SERIAL UNIQUE,
-    teamname TEXT NOT NULL,
-    current_project_level text DEFAULT 'gemini',
+    team_name TEXT NOT NULL,
+    team_project_level text DEFAULT 'gemini',
     ignition_pitch_poster TEXT,
     adviser INT,
     mentor INT
@@ -141,7 +141,7 @@ CREATE TABLE adviser_evaluationships (
 CREATE TABLE orbital_state (
     oid SERIAL UNIQUE,
     cohort TEXT NOT NULL DEFAULT date_part('year', CURRENT_DATE),
-    data jsonb
+    data JSONB
 );
 
 -- data {
