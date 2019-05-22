@@ -1,0 +1,16 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+  <link href='./css/global.css' rel='stylesheet' type='text/css'>
+  <link href='./css/navbar.css' rel='stylesheet' type='text/css'>
+</head>
+{{template "navbar.html" .}}
+<section class="689a9b4-body">
+  <h1>You are: {{if .LoggedIn}} Logged In {{else}} Logged out {{end}}</h1>
+  <form action="/sessionset" method="post">
+    <button type="submit">Set Session</button>
+  </form>
+  <form action="/sessionrevoke" method="post">
+    <button type="submit">Revoke Session</button>
+  </form>
+</section>

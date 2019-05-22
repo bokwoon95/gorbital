@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/bokwoon95/orbital/models"
+	"github.com/bokwoon95/orbital/db"
 	// "github.com/davecgh/go-spew/spew"
 )
 
@@ -33,7 +33,7 @@ type Contract361d489 struct {
 
 // PastYearShowcase361d489 lorem ipsum
 func PastYearShowcase361d489(w http.ResponseWriter, r *http.Request) {
-	rows, _ := models.DB.Queryx(`
+	rows, _ := db.DB.Queryx(`
 		SELECT t.tid ,u.display_name as adviser ,project_name ,ignition_pitch_poster ,project_poster,project_video 
 		FROM submissions s JOIN teams t ON t.tid = s.team JOIN advisers a ON a.uid = t.adviser JOIN users u ON u.uid = a.uid;
 		`)

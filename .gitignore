@@ -1,3 +1,4 @@
 node_modules/
-orbital_dev/
+orbitaldb_dev/
+sessiondb_dev/
 tmp/

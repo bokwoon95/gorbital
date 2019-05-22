@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-
 	// "github.com/davecgh/go-spew/spew"
 )
 
@@ -23,9 +22,9 @@ func AboutOrbital5380c8f(w http.ResponseWriter, r *http.Request) {
 			"html/navbar.html",
 		),
 		&Contract5380c8f{
-			LoggedIn: false,
-			DisplayName: "",
-			Role: "public",
+			LoggedIn:              false,
+			DisplayName:           "",
+			Role:                  "public",
 			ParticipantTeamStatus: "",
 		},
 	)

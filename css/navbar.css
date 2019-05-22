@@ -5,6 +5,7 @@ nav[class='55a11c7-navbar'] > ul {
   background-color: #20395B;
   list-style: none;
   flex-wrap: wrap;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
 nav[class='55a11c7-navbar'] > ul > li.middleSeparator {
