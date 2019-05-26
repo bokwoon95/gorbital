@@ -1,4 +1,4 @@
 node_modules/
 orbitaldb_dev/
 sessiondb_dev/
-tmp/
+.fresh_tmp/

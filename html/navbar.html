@@ -1,13 +1,13 @@
 {{define "navbar.html"}}
   {{if not .LoggedIn}}
     {{template "navbar.html public" .}}
-  {{else if eq .Role "participant"}}
+  {{else if eq .Role .Roles.Participant}}
     {{template "navbar.html participant" .}}
-  {{else if eq .Role "adviser"}}
+  {{else if eq .Role .Roles.Adviser}}
     {{template "navbar.html adviser" .}}
-  {{else if eq .Role "mentor"}}
+  {{else if eq .Role .Roles.Mentor}}
     {{template "navbar.html mentor" .}}
-  {{else if eq .Role "admin"}}
+  {{else if eq .Role .Roles.Admin}}
     {{template "navbar.html admin" .}}
   {{else}}
     {{template "navbar.html public" .}}
@@ -15,7 +15,7 @@
 {{end}}
 
 {{define "navbar.html public"}}
-<nav class="55a11c7-navbar">
+<nav class="55a11c7-desktop">
   <ul>
     <li><a class="logo" href="/">NUS Orbital</a></li>
     <li><a href="/showcase">Past Year Showcase</a></li>
@@ -25,7 +25,7 @@
     <li><a href="/login">Login</a></li>
   </ul>
 </nav>
-<nav class="c1cdfd8-hamburger">
+<nav class="c1cdfd8-mobile">
   <a class="logo" href="/">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -39,7 +39,7 @@
 {{end}}
 
 {{define "navbar.html participant"}}
-<nav class="55a11c7-navbar">
+<nav class="55a11c7-desktop">
   <ul>
     <li><a class="logo" href="/">NUS Orbital</a></li>
     <li><a href="#">Submissions</a></li>
@@ -47,20 +47,22 @@
     <li><a href="https://www.facebook.com/nus.orbital/" target="_blank">News</a></li>
     <li><a href="#">Forum</a></li>
     <li class="middleSeparator"></li>
-    {{if eq .ParticipantTeamStatus "teamless"}}
+    {{if eq .ParticipantTeamStatus .ParticipantTeamStatuses.Teamless}}
       <li><a href="#" style="background-color:red">Create Team</a></li>
-    {{else if eq .ParticipantTeamStatus "inviteSent"}}
+    {{else if eq .ParticipantTeamStatus .ParticipantTeamStatuses.InviteSent}}
       <li><a href="#" style="background-color:red">Invite Sent</a></li>
-    {{else if eq .ParticipantTeamStatus "invitePending"}}
+    {{else if eq .ParticipantTeamStatus .ParticipantTeamStatuses.InvitePending}}
       <li><a href="#" style="background-color:red">Invite Pending</a></li>
     {{else}}
       <li><a href="#">Your Team</a></li>
     {{end}}
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
-<nav class="c1cdfd8-hamburger">
+<nav class="c1cdfd8-mobile">
   <a class="logo" href="/">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -79,13 +81,15 @@
       <li><a href="#">Your Team</a></li>
     {{end}}
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
 {{end}}
 
 {{define "navbar.html adviser"}}
-<nav class="55a11c7-navbar">
+<nav class="55a11c7-desktop">
   <ul>
     <li><a class="logo" href="/">NUS Orbital</a></li>
     <li><a href="/showcase">Past Year Showcase</a></li>
@@ -95,10 +99,12 @@
     <li><a href="#">Evaluate Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
-<nav class="c1cdfd8-hamburger">
+<nav class="c1cdfd8-mobile">
   <a class="logo" href="/">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -109,13 +115,15 @@
     <li><a href="#">Evaluate Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
 {{end}}
 
 {{define "navbar.html mentor"}}
-<nav class="55a11c7-navbar">
+<nav class="55a11c7-desktop">
   <ul>
     <li><a class="logo" href="/">NUS Orbital</a></li>
     <li><a href="/showcase">Past Year Showcase</a></li>
@@ -125,9 +133,11 @@
     <li><a href="#">View Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
-<nav class="c1cdfd8-hamburger">
+<nav class="c1cdfd8-mobile">
   <a class="logo" href="/">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -138,14 +148,16 @@
     <li><a href="#">View Submissions</a></li>
     <li><a href="#">Your Teams</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
 </nav>
 {{end}}
 
 {{define "navbar.html admin"}}
-<nav class="55a11c7-navbar">
+<nav class="55a11c7-desktop">
   <ul>
     <li><a class="logo" href="/">NUS Orbital</a></li>
     <li><a href="/showcase">Past Year Showcase</a></li>
@@ -158,10 +170,12 @@
     <li><a href="#">Edit Evaluationships</a></li>
     <li><a href="#">Edit Milestones</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
-<nav class="c1cdfd8-hamburger">
+<nav class="c1cdfd8-mobile">
   <a class="logo" href="/">NUS Orbital</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
   <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
@@ -175,7 +189,9 @@
     <li><a href="#">Edit Evaluationships</a></li>
     <li><a href="#">Edit Milestones</a></li>
     <li><a href="#" style="font-style:italic;color:white">{{.DisplayName}}</a></li>
-    <li><a href="#">Logout</a></li>
+    <form action="/logout" method="post">
+      <button type="submit" class="navbar-linkbutton">Logout</button>
+    </form>
   </ul>
 </nav>
 {{end}}

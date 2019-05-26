@@ -84,7 +84,7 @@ SELECT * FROM users JOIN facilitators USING (uid);
 CREATE TABLE teams (
     tid SERIAL UNIQUE,
     team_name TEXT NOT NULL,
-    team_project_level text DEFAULT 'gemini',
+    team_project_level text NOT NULL DEFAULT 'gemini',
     ignition_pitch_poster TEXT,
     adviser INT,
     mentor INT

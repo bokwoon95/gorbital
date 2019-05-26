@@ -10,9 +10,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/bokwoon95/orbital/erro"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver for sqlx
-	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,15 +26,16 @@ const hmacSecretKey = "hmac-secret-key" // should be set as env var in the futur
 const cookieName = "rawCookie"
 
 // Init will initialize the SessionDB object for storing sessions
-func Init() {
+func Init() error {
 	var err error
 	if SessionDB, err = sqlx.Open(
 		"postgres",
 		"postgres://bokwoon@localhost:5434/sessiondb_dev?sslmode=disable",
 	); err != nil {
-		panic(err)
+		return erro.Wrap(err)
 	}
 	hmacEncoder = hmac.New(sha256.New, []byte(hmacSecretKey))
+	return nil
 }
 
 // HashPassword returns a hash of the user's password
@@ -52,7 +53,7 @@ func generateRandomString() (string, error) {
 	arr := make([]byte, 32)
 	_, err := rand.Read(arr)
 	if err != nil {
-		return "", err
+		return "", erro.Wrap(err)
 	}
 	return base64.URLEncoding.EncodeToString(arr), nil
 }
@@ -68,9 +69,13 @@ func hashCookie(rawCookie string) string {
 func SetSession(w http.ResponseWriter, r *http.Request, userid int) error {
 	rawCookie, err := generateRandomString()
 	if err != nil {
-		return errors.Wrap(err, "failed creating random string for rawCookie")
+		return erro.Wrap(err)
 	}
 	hashedCookie := hashCookie(rawCookie)
+	_, err = SessionDB.Exec("INSERT INTO sessions (hash, id) VALUES ($1, $2)", hashedCookie, userid)
+	if err != nil {
+		return erro.Wrap(err)
+	}
 	http.SetCookie(w, &http.Cookie{
 		Name:     cookieName,
 		Value:    rawCookie,
@@ -80,55 +85,44 @@ func SetSession(w http.ResponseWriter, r *http.Request, userid int) error {
 		MaxAge: int((time.Hour * 24 * 30).Seconds()), // one month (in seconds)
 		// Path: "",
 	})
-	_, err = SessionDB.Exec("INSERT INTO sessions (hash, id) VALUES ($1, $2)", hashedCookie, userid)
-	if err != nil {
-		return errors.Wrap(err, "failed to insert hash into sessions table")
-	}
 	return nil
 }
 
-// GetActiveSession lorem ipsum
-func GetActiveSession(r *http.Request) (string, int) {
-	rawCookie, err := r.Cookie(cookieName)
+// GetActiveSession returns the hashedCookie and uid of the current logged in
+// user. If nobody is logged in or if the user's rawCookie is not present in
+// the 'sessions' table, it returns an empty string and 0
+func GetActiveSession(r *http.Request) (string, int, error) {
+	rawCookieObj, err := r.Cookie(cookieName)
 	if err != nil {
-		return "", 0
+		if err == http.ErrNoCookie {
+			return "", 0, nil
+		}
+		return "", 0, erro.Wrap(err)
 	}
-	hashedCookie := hashCookie(rawCookie.Value)
-	fmt.Println("hashedCookie is " + hashedCookie)
-	session := &struct {
+	hashedCookie := hashCookie(rawCookieObj.Value)
+	session := struct {
 		Hash string `db:"hash"`
-		Id   int    `db:"id"`
+		ID   int    `db:"id"`
 	}{}
-	err = SessionDB.QueryRowx("SELECT hash, id FROM sessions WHERE hash = $1 LIMIT 1", hashedCookie).StructScan(session)
+	err = SessionDB.QueryRowx("SELECT hash, id FROM sessions WHERE hash = $1 LIMIT 1", hashedCookie).StructScan(&session)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("SELECT hash, id FROM sessions WHERE hash = " + hashedCookie)
-	fmt.Println("session.hash:" + session.Hash + " session.id:" + string(session.Id))
-	return session.Hash, session.Id
+	return session.Hash, session.ID, nil
 }
 
 // RevokeSession will wipe the session cookie of anyone who ends up calling it
 func RevokeSession(w http.ResponseWriter, r *http.Request) error {
-	rawCookie, err := r.Cookie(cookieName)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("cookie '%s' does not exist in user's browser", cookieName))
-	}
-	hashedCookie := hashCookie(rawCookie.Value)
+	hashedCookie, _, _ := GetActiveSession(r)
 	http.SetCookie(w, &http.Cookie{
 		Name:   cookieName,
 		Value:  "",
 		MaxAge: 0,
 		Path:   "/",
 	})
-	_, err = SessionDB.Exec("DELETE FROM sessions WHERE hash = $1", hashedCookie)
+	_, err := SessionDB.Exec("DELETE FROM sessions WHERE hash = $1", hashedCookie)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed trying to delete session row from sessions table"))
+		return erro.Wrap(err)
 	}
 	return nil
 }
-
-// RefreshSession will reissue
-// func RefreshSession(w http.ResponseWriter, r *http.Request) {
-// 	RevokeSession(w, r)
-// }

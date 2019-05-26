@@ -1,81 +1,78 @@
 package controllers
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/bokwoon95/orbital/auth"
 	"github.com/bokwoon95/orbital/db"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/bokwoon95/orbital/erro"
 )
 
-// Contract689a9b4 lorem ipsum
+// Contract689a9b4 contains the variables that will be passed into login.689a9b4.html
 type Contract689a9b4 struct {
-	LoggedIn              bool
-	DisplayName           string
-	Role                  string
-	ParticipantTeamStatus string
-	DebugString           string
+	LoggedIn                bool
+	DisplayName             string
+	Role                    string
+	Roles                   db.RolesStruct
+	ParticipantTeamStatus   string
+	ParticipantTeamStatuses db.ParticipantTeamStatusesStruct
 }
 
 // LoginGet689a9b4 lorem ipsum
 func LoginGet689a9b4(w http.ResponseWriter, r *http.Request) {
-	mustExecute(w,
-		mustParse(
-			"html/login.689a9b4.html",
-			"html/navbar.html",
-		),
-		&Contract86c89e6{
-			LoggedIn:              false,
-			DisplayName:           "",
-			Role:                  "public",
-			ParticipantTeamStatus: "teamless",
-			DebugString:           spew.Sdump(r),
-		},
-	)
+	// TODO: if loggedIn, redirect to homepage
+
+	loggedIn, _, displayName, role, participantTeamStatus, err := db.GetNavbarData(r)
+	if err != nil {
+		erro.Dump(w, err)
+	}
+
+	mustExecute(w, mustParse(w,
+		"html/login.689a9b4.html",
+		"html/navbar.html",
+	), &Contract689a9b4{
+		LoggedIn:                loggedIn,
+		DisplayName:             displayName,
+		Role:                    role,
+		Roles:                   db.Roles,
+		ParticipantTeamStatus:   participantTeamStatus,
+		ParticipantTeamStatuses: db.ParticipantTeamStatuses,
+	})
 }
 
 // LoginPost689a9b4 lorem ipsum
 func LoginPost689a9b4(w http.ResponseWriter, r *http.Request) {
-	var err error
+	// TODO: if loggedIn, ignore request
 
-	err = r.ParseForm()
+	err := r.ParseForm()
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
 	nusnetid := r.FormValue("nusnetid")
 	password := r.FormValue("password")
-	type temp struct {
-		UserID       string `db:"uid"`
-		PasswordHash string `db:"password"`
-		DisplayName  string `db:"display_name"`
+	if nusnetid == "" {
+		erro.Dump(w, err)
+		return
 	}
-	var t temp
-	err = db.DB.QueryRowx("SELECT uid, display_name, password FROM users WHERE nusnetid = $1", nusnetid).StructScan(&t)
+	user, err := db.GetUserByNUSNET(nusnetid)
 	if err != nil {
-		log.Println(err)
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
-	err = auth.CompareHashAndPassword(t.PasswordHash, password)
+	err = auth.CompareHashAndPassword(user.PasswordHash, password)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
-	mustExecute(w, mustParse(
-			"html/login.689a9b4.html",
-			"html/navbar.html",
-		), &Contract86c89e6{
-			LoggedIn:              false,
-			DisplayName:           "",
-			Role:                  "public",
-			ParticipantTeamStatus: "teamless",
-			DebugString:           "congrats, you're in " + t.DisplayName,
-		},
-	)
+	err = auth.SetSession(w, r, user.ID)
+	if err != nil {
+		erro.Dump(w, err)
+		return
+	}
+
+	http.Redirect(w, r, "/", 301)
 }

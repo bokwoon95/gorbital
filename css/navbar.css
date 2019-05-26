@@ -1,4 +1,4 @@
-nav[class='55a11c7-navbar'] > ul {
+nav[class='55a11c7-desktop'] > ul {
   display: flex;
   padding: 0 30px 0 30px;
   margin: 0;
@@ -8,12 +8,12 @@ nav[class='55a11c7-navbar'] > ul {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
 }
 
-nav[class='55a11c7-navbar'] > ul > li.middleSeparator {
+nav[class='55a11c7-desktop'] > ul > li.middleSeparator {
   margin-right: auto;
   margin-left: auto;
 }
 
-nav[class='55a11c7-navbar'] > ul > li > a {
+nav[class='55a11c7-desktop'] > ul > li > a {
   display: flex;
   padding: 15px 16px 15px 16px;
   color: #9BD5FD;
@@ -21,12 +21,39 @@ nav[class='55a11c7-navbar'] > ul > li > a {
   font-family: Roboto Condensed, serif;
 }
 
-nav[class='55a11c7-navbar'] > ul > li:hover {
+nav[class='55a11c7-desktop'] > ul > li > a:hover {
   background-color: #294974;
   color: #CDE1FE;
 }
 
-nav[class='55a11c7-navbar'] a.logo {
+nav[class='55a11c7-desktop'] > ul > form {
+  margin: 0;
+}
+
+nav[class='55a11c7-desktop'] button.navbar-linkbutton {
+  display: flex;
+  padding: 15px 16px 15px 16px;
+  color: #9BD5FD;
+  text-decoration: none;
+  font-family: Roboto Condensed, serif;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+nav[class='55a11c7-desktop'] > ul > form > button:hover {
+  background-color: #294974;
+  color: #CDE1FE;
+}
+
+nav[class='55a11c7-desktop'] a.logo {
+  font-size: 1.1rem;
+  font-style: bold;
+  color: white;
+}
+
+nav[class='55a11c7-desktop'] a.logo:hover {
   font-size: 1.1rem;
   font-style: bold;
   color: white;
@@ -35,31 +62,31 @@ nav[class='55a11c7-navbar'] a.logo {
 /* pure css hamburger menu */
 /* https://codepen.io/mutedblues/pen/MmPNPG */
 @media only screen and (min-width: 601px) {
-  nav[class='c1cdfd8-hamburger'] {
+  nav[class='c1cdfd8-mobile'] {
     display: none;
   }
-  nav[class='55a11c7-navbar'] > ul {
+  nav[class='55a11c7-desktop'] > ul {
     display: flex;
   }
 }
 
 @media only screen and (max-width: 600px) {
-  nav[class='55a11c7-navbar c1cdfd8-hamburger'] {
+  nav[class='55a11c7-desktop c1cdfd8-mobile'] {
     display: flex;
   }
-  nav[class='55a11c7-navbar'] > ul {
+  nav[class='55a11c7-desktop'] > ul {
     display: none;
   }
 }
 
-nav[class='c1cdfd8-hamburger'] {
+nav[class='c1cdfd8-mobile'] {
   background-color: #20395B;
   box-shadow: 1px 1px 4px 0 rgba(0,0,0,.1);
   position: top;
   padding: 0 30px 0 30px;
 }
 
-nav[class='c1cdfd8-hamburger'] > ul {
+nav[class='c1cdfd8-mobile'] > ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -67,7 +94,7 @@ nav[class='c1cdfd8-hamburger'] > ul {
   background-color: #20395B;
 }
 
-nav[class='c1cdfd8-hamburger'] > ul > li > a {
+nav[class='c1cdfd8-mobile'] > ul > li > a {
   display: block;
   padding: 20px 20px;
   color: #9BD5FD;
@@ -75,13 +102,34 @@ nav[class='c1cdfd8-hamburger'] > ul > li > a {
   font-family: Roboto Condensed, serif;
 }
 
-nav[class='c1cdfd8-hamburger'] li a:hover,
-nav[class='c1cdfd8-hamburger'] .menu-btn:hover {
+nav[class='c1cdfd8-mobile'] li a:hover,
+nav[class='c1cdfd8-mobile'] .menu-btn:hover {
   background-color: #294974;
   color: #CDE1FE;
 }
 
-nav[class='c1cdfd8-hamburger'] .logo {
+nav[class='c1cdfd8-mobile'] form {
+  margin: 0;
+}
+
+nav[class='c1cdfd8-mobile'] button.navbar-linkbutton {
+  display: flex;
+  padding: 15px 16px 15px 16px;
+  color: #9BD5FD;
+  text-decoration: none;
+  font-family: Roboto Condensed, serif;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+nav[class='c1cdfd8-mobile'] button:hover {
+  background-color: #294974;
+  color: #CDE1FE;
+}
+
+nav[class='c1cdfd8-mobile'] .logo {
   display: block;
   float: left;
   font-size: 1.1em;
@@ -92,17 +140,17 @@ nav[class='c1cdfd8-hamburger'] .logo {
   font-family: Roboto Condensed, serif;
 }
 
-nav[class='c1cdfd8-hamburger'] .logo:hover {
+nav[class='c1cdfd8-mobile'] .logo:hover {
   background-color: #294974;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu {
+nav[class='c1cdfd8-mobile'] .menu {
   clear: both;
   max-height: 0;
   transition: max-height .2s ease-in-out;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon {
+nav[class='c1cdfd8-mobile'] .menu-icon {
   cursor: pointer; /* Show element as clickable on hover*/
   display: inline-block;
   float: right;
@@ -110,7 +158,7 @@ nav[class='c1cdfd8-hamburger'] .menu-icon {
   user-select: none;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon .navicon {
+nav[class='c1cdfd8-mobile'] .menu-icon .navicon {
   background: #9BD5FD;
   display: block;
   height: 2px;
@@ -119,8 +167,8 @@ nav[class='c1cdfd8-hamburger'] .menu-icon .navicon {
   width: 18px;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon .navicon:before,
-nav[class='c1cdfd8-hamburger'] .menu-icon .navicon:after {
+nav[class='c1cdfd8-mobile'] .menu-icon .navicon:before,
+nav[class='c1cdfd8-mobile'] .menu-icon .navicon:after {
   background: #9BD5FD;
   content: '';
   display: block;
@@ -130,39 +178,39 @@ nav[class='c1cdfd8-hamburger'] .menu-icon .navicon:after {
   width: 100%;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon:hover {
+nav[class='c1cdfd8-mobile'] .menu-icon:hover {
   background-color: #294974;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon .navicon:before {
+nav[class='c1cdfd8-mobile'] .menu-icon .navicon:before {
   top: 5px;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-icon .navicon:after {
+nav[class='c1cdfd8-mobile'] .menu-icon .navicon:after {
   top: -5px;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn {
+nav[class='c1cdfd8-mobile'] .menu-btn {
   display: none;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu {
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu {
   max-height: 999px;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu-icon .navicon {
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu-icon .navicon {
   background: transparent;
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu-icon .navicon:before {
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu-icon .navicon:before {
   transform: rotate(-45deg);
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu-icon .navicon:after {
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu-icon .navicon:after {
   transform: rotate(45deg);
 }
 
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
-nav[class='c1cdfd8-hamburger'] .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+nav[class='c1cdfd8-mobile'] .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
   top: 0;
 }

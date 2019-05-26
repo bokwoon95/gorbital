@@ -1,45 +1,49 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/bokwoon95/orbital/auth"
 	"github.com/bokwoon95/orbital/db"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/bokwoon95/orbital/erro"
 )
 
-// Contract86c89e6 lorem ipsum
+// Contract86c89e6 contains the variables that will be passed into register.86c89e6.html
 type Contract86c89e6 struct {
-	LoggedIn              bool
-	DisplayName           string
-	Role                  string
-	ParticipantTeamStatus string
-	DebugString           string
+	LoggedIn                bool
+	DisplayName             string
+	Role                    string
+	Roles                   db.RolesStruct
+	ParticipantTeamStatus   string
+	ParticipantTeamStatuses db.ParticipantTeamStatusesStruct
 }
 
 // RegisterGet86c89e6 lorem ipsum
 func RegisterGet86c89e6(w http.ResponseWriter, r *http.Request) {
-	mustExecute(w,
-		mustParse(
-			"html/register.86c89e6.html",
-			"html/navbar.html",
-		),
-		&Contract86c89e6{
-			LoggedIn:              false,
-			DisplayName:           "",
-			Role:                  "public",
-			ParticipantTeamStatus: "teamless",
-			DebugString:           spew.Sdump(r),
-		},
-	)
+	loggedIn, _, displayName, role, participantTeamStatus, err := db.GetNavbarData(r)
+	if err != nil {
+		erro.Dump(w, err)
+		return
+	}
+
+	mustExecute(w, mustParse(w,
+		"html/register.86c89e6.html",
+		"html/navbar.html",
+	), &Contract86c89e6{
+		LoggedIn:                loggedIn,
+		DisplayName:             displayName,
+		Role:                    role,
+		Roles:                   db.Roles,
+		ParticipantTeamStatus:   participantTeamStatus,
+		ParticipantTeamStatuses: db.ParticipantTeamStatuses,
+	})
 }
 
 // RegisterPost86c89e6 lorem ipsum
 func RegisterPost86c89e6(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
@@ -51,26 +55,22 @@ func RegisterPost86c89e6(w http.ResponseWriter, r *http.Request) {
 	displayname := r.Form["display_name"][0]
 	passwordhash, err := auth.HashPassword(password)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
-	_, err = db.DB.Exec(`
-	INSERT INTO users (nusnetid, password, display_name) VALUES ($1, $2, $3)
-	`, nusnetid, passwordhash, displayname)
+	var uid int
+	uid, err = db.InsertParticipant(nusnetid, passwordhash, displayname)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		erro.Dump(w, err)
 		return
 	}
 
-	mustExecute(w, mustParse(
-		"html/register.86c89e6.html",
-		"html/navbar.html",
-	), &Contract86c89e6{
-		LoggedIn:              false,
-		DisplayName:           "",
-		Role:                  "public",
-		ParticipantTeamStatus: "teamless",
-		DebugString:           spew.Sdump(r),
-	})
+	err = auth.SetSession(w, r, uid)
+	if err != nil {
+		erro.Dump(w, err)
+		return
+	}
+
+	http.Redirect(w, r, "/", 301)
 }

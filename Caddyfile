@@ -1,0 +1,8 @@
+localhost:3001 {
+    proxy / localhost:3000 {
+        insecure_skip_verify
+        except /css /images
+    }
+    tls self_signed
+}
+

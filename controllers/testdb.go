@@ -1,18 +1,17 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/bokwoon95/orbital/db"
+	"github.com/bokwoon95/orbital/erro"
 )
 
 // TestDB will ping the database to see if it works
 func TestDB(w http.ResponseWriter, r *http.Request) {
 	if err := db.DB.Ping(); err != nil {
-		fmt.Fprintf(w, err.Error())
-		panic(err)
+		erro.Dump(w, err)
 	} else {
-		fmt.Fprintf(w, "db connection success")
+		w.Write([]byte("db connection success"))
 	}
 }

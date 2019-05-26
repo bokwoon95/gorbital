@@ -7,24 +7,29 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/bokwoon95/orbital/auth"
 	"github.com/bokwoon95/orbital/controllers"
 	"github.com/bokwoon95/orbital/db"
-	"github.com/bokwoon95/orbital/auth"
 	"github.com/go-chi/chi"
 )
 
 func main() {
+	// configure log to print in format '<date> <time> <filename:linenumber> message'
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	// Initialize database and defer its closing to the end of main()
-	db.Init()
+	err := db.Init()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	defer db.DB.Close()
 
 	// Initialize session database
-	auth.Init()
+	err = auth.Init()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	defer auth.SessionDB.Close()
-
-
-	// configure log to print '<date> <time> <filename:linenumber> message'
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// Initialize router
 	r := chi.NewRouter()
@@ -37,7 +42,11 @@ func main() {
 	r.Post("/register", controllers.RegisterPost86c89e6)
 	r.Get("/login", controllers.LoginGet689a9b4)
 	r.Post("/login", controllers.LoginPost689a9b4)
+	r.Get("/sessionrevoke2", controllers.SessionRevoke)
+	r.Post("/logout", controllers.Logout)
 
+	r.Get("/cookie", controllers.CookieInspectorGet)
+	r.Post("/cookie", controllers.CookieInspectorPost)
 	r.Get("/session", controllers.SessionGet)
 	r.Post("/sessionset", controllers.SessionSet)
 	r.Post("/sessionrevoke", controllers.SessionRevoke)

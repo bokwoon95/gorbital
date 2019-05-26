@@ -1,5 +1,6 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="filename" content="pastYearShowcase.361d489.html">
   <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
   <link href='./css/global.css' rel='stylesheet' type='text/css'>
   <link href='./css/navbar.css' rel='stylesheet' type='text/css'>
@@ -25,12 +26,20 @@
 <section class="cards">
   {{range .Projects}}
     <article>
-      <img class="article-img" src="{{.IgnitionPitchPoster}}" alt=" " />
-      <p>{{.ProjectName}}</p>
-      <p>Project Video: <a href="{{.ProjectVideo.String}}" target="_blank">Link</a></p>
-      <p>Project Poster: <a href="{{.ProjectPoster.String}}" target="_blank">Link</a></p>
-      <!-- <p>Students: </p> -->
-      <p>Advised by: {{.Adviser}}</p>
+      <img class="article-img" src="{{.IgnitionPitchPoster.String}}" alt=" " />
+      <p>Project Name: {{.ProjectName}}</p>
+      <p>Team: {{.TeamName}}</p>
+      <p>Cohort: {{.Cohort}}</p>
+      <p>Project Level: {{.ProjectLevel}}</p>
+      <p>Students: {{.Participant1}} and {{.Participant2}}</p>
+      <p>Advised by: {{.Adviser.String}}</p>
+      <p>Mentored by: {{.Mentor.String}}</p>
+      <p>
+        <a href="{{.ProjectLink.String}}" target="_blank">GitHub</a>
+        <a href="{{.ProjectReadme.String}}" target="_blank">Readme</a>
+        <a href="{{.ProjectVideo.String}}" target="_blank">Video</a>
+        <a href="{{.ProjectPoster.String}}" target="_blank">Poster</a>
+      </p>
     </article>
   {{end}}
 </section>
