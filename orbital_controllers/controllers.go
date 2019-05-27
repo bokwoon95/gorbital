@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/bokwoon95/orbital/erro"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
 func mustParse(w http.ResponseWriter, templateFiles ...string) *template.Template {

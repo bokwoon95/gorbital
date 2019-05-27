@@ -3,13 +3,13 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/bokwoon95/orbital/auth"
-	"github.com/bokwoon95/orbital/db"
-	"github.com/bokwoon95/orbital/erro"
+	auth "github.com/bokwoon95/orbital/auth"
+	db "github.com/bokwoon95/orbital/orbital_db"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
-// Contract86c89e6 contains the variables that will be passed into register.86c89e6.html
-type Contract86c89e6 struct {
+// Contract689a9b4 contains the variables that will be passed into login.689a9b4.html
+type Contract689a9b4 struct {
 	LoggedIn                bool
 	DisplayName             string
 	Role                    string
@@ -18,18 +18,19 @@ type Contract86c89e6 struct {
 	ParticipantTeamStatuses db.ParticipantTeamStatusesStruct
 }
 
-// RegisterGet86c89e6 lorem ipsum
-func RegisterGet86c89e6(w http.ResponseWriter, r *http.Request) {
+// LoginGet lorem ipsum
+func LoginGet(w http.ResponseWriter, r *http.Request) {
+	// TODO: if loggedIn, redirect to homepage
+
 	loggedIn, _, displayName, role, participantTeamStatus, err := db.GetNavbarData(r)
 	if err != nil {
 		erro.Dump(w, err)
-		return
 	}
 
 	mustExecute(w, mustParse(w,
-		"html/register.86c89e6.html",
-		"html/navbar.html",
-	), &Contract86c89e6{
+		"orbital_views/login.689a9b4.html",
+		"orbital_views/navbar.html",
+	), &Contract689a9b4{
 		LoggedIn:                loggedIn,
 		DisplayName:             displayName,
 		Role:                    role,
@@ -39,34 +40,35 @@ func RegisterGet86c89e6(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// RegisterPost86c89e6 lorem ipsum
-func RegisterPost86c89e6(w http.ResponseWriter, r *http.Request) {
+// LoginPost lorem ipsum
+func LoginPost(w http.ResponseWriter, r *http.Request) {
+	// TODO: if loggedIn, ignore request
+
 	err := r.ParseForm()
 	if err != nil {
 		erro.Dump(w, err)
 		return
 	}
 
-	// Accessing a nonexistent key will panic with an unhelpful message
-	// TODO: wrap accessing the form values in a .Get() function that will
-	// throw helpful errors when trying to access nonexistent keys
 	nusnetid := r.FormValue("nusnetid")
 	password := r.FormValue("password")
-	displayname := r.Form["display_name"][0]
-	passwordhash, err := auth.HashPassword(password)
+	if nusnetid == "" {
+		erro.Dump(w, err)
+		return
+	}
+	user, err := db.GetUserByNUSNET(nusnetid)
 	if err != nil {
 		erro.Dump(w, err)
 		return
 	}
 
-	var uid int
-	uid, err = db.InsertParticipant(nusnetid, passwordhash, displayname)
+	err = auth.CompareHashAndPassword(user.PasswordHash, password)
 	if err != nil {
 		erro.Dump(w, err)
 		return
 	}
 
-	err = auth.SetSession(w, r, uid)
+	err = auth.SetSession(w, r, user.ID)
 	if err != nil {
 		erro.Dump(w, err)
 		return

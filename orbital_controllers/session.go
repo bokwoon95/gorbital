@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/bokwoon95/orbital/auth"
-	"github.com/bokwoon95/orbital/db"
-	"github.com/bokwoon95/orbital/erro"
+	auth "github.com/bokwoon95/orbital/auth"
+	db "github.com/bokwoon95/orbital/orbital_db"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
 // ContractSession lorem ipsum
@@ -23,8 +23,8 @@ type ContractSession struct {
 func SessionGet(w http.ResponseWriter, r *http.Request) {
 	hashedCookie, uid, _ := auth.GetActiveSession(r)
 	mustExecute(w, mustParse(w,
-		"html/session.html",
-		"html/navbar.html",
+		"orbital_views/session.html",
+		"orbital_views/navbar.html",
 	), &ContractSession{
 		LoggedIn:              hashedCookie != "",
 		DisplayName:           string(uid),

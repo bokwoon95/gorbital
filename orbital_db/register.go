@@ -1,6 +1,6 @@
 package db
 
-import "github.com/bokwoon95/orbital/erro"
+import erro "github.com/bokwoon95/orbital/erro"
 
 // InsertParticipant lorem ipsum
 func InsertParticipant(nusnetid string, passwordhash string, displayname string) (int, error) {

@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/bokwoon95/orbital/db"
-	"github.com/bokwoon95/orbital/erro"
+	db "github.com/bokwoon95/orbital/orbital_db"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
 // TestDB will ping the database to see if it works

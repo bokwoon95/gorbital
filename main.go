@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bokwoon95/orbital/auth"
-	"github.com/bokwoon95/orbital/controllers"
-	"github.com/bokwoon95/orbital/db"
+	auth "github.com/bokwoon95/orbital/auth"
+	controllers "github.com/bokwoon95/orbital/orbital_controllers"
+	db "github.com/bokwoon95/orbital/orbital_db"
 	"github.com/go-chi/chi"
 )
 
@@ -36,13 +36,12 @@ func main() {
 
 	// Set up routes
 	r.Get("/testdb", controllers.TestDB)
-	r.Get("/", controllers.AboutOrbital5380c8f)
-	r.Get("/showcase", controllers.PastYearShowcase361d489)
-	r.Get("/register", controllers.RegisterGet86c89e6)
-	r.Post("/register", controllers.RegisterPost86c89e6)
-	r.Get("/login", controllers.LoginGet689a9b4)
-	r.Post("/login", controllers.LoginPost689a9b4)
-	r.Get("/sessionrevoke2", controllers.SessionRevoke)
+	r.Get("/", controllers.AboutOrbital)
+	r.Get("/showcase", controllers.PastYearShowcase)
+	r.Get("/register", controllers.RegisterGet)
+	r.Post("/register", controllers.RegisterPost)
+	r.Get("/login", controllers.LoginGet)
+	r.Post("/login", controllers.LoginPost)
 	r.Post("/logout", controllers.Logout)
 
 	r.Get("/cookie", controllers.CookieInspectorGet)
@@ -53,9 +52,7 @@ func main() {
 
 	// Ensure the below directories are accessible to the public
 	workDir, _ := os.Getwd()
-	fileserver(r, "/images", http.Dir(filepath.Join(workDir, "/images")))
-	fileserver(r, "/css", http.Dir(filepath.Join(workDir, "/css")))
-	fileserver(r, "/js", http.Dir(filepath.Join(workDir, "/js")))
+	fileserver(r, "/orbital_views", http.Dir(filepath.Join(workDir, "/orbital_views")))
 
 	// Start the server
 	http.ListenAndServe(":3000", r)

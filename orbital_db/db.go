@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/bokwoon95/orbital/erro"
+	erro "github.com/bokwoon95/orbital/erro"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver for sqlx
 )

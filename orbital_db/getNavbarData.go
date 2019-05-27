@@ -3,8 +3,8 @@ package db
 import (
 	"net/http"
 
-	"github.com/bokwoon95/orbital/auth"
-	"github.com/bokwoon95/orbital/erro"
+	auth "github.com/bokwoon95/orbital/auth"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
 // GetNavbarData lorem ipsum

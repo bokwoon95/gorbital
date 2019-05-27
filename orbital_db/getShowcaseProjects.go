@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"github.com/bokwoon95/orbital/erro"
+	erro "github.com/bokwoon95/orbital/erro"
 )
 
 // Project lorem ipsum
